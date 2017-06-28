@@ -36,12 +36,27 @@ export default class  ProfileStore{
         
         this.userInfo = result;
         
-        AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO,this.userInfo); 
+        AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO, this.userInfo); 
         
         return result;
   }
 
   async logout(){
       this.userInfo = null; // 这句代码的调用 会触发这个 AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO,this.userInfo)，导致本地存储的用户信息被清除
+  }
+
+  async getOnlineUserList(){
+
+      //服务端请求获取
+      let result = JSON.stringify({
+          name,
+          userID
+      });
+
+      this.friendList = result;
+
+      AsyncStorage.setItem(this.STORAGE_KEY_FRIEND_LIST, this.friendList);
+
+      return result;
   }
 }
