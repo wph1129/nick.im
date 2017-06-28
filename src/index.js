@@ -8,7 +8,7 @@ import {
 
 import {
  Navigator
-} from './UILibrary';
+} from './uiLibrary';
 
 
 import Login from './component/login';
