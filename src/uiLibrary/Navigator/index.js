@@ -70,4 +70,117 @@ export default class Navigator extends Component{
             stack:stack
         });
     }
+
+    push = (component:object, title:sring = '', props:object = {},renderRightComponent:function =()=>{null;}, isShowHeader:boolean = true)=>{
+        this._componentStack.push(component);
+        let newStack = NavigationStateUtils.push(this.state.stack,{
+            key:String(this.state.stack.index + 1),
+            title:title || component.NavigationTitle || '',
+            isShowHeader:isShowHeader,
+            renderRightComponent:renderRightComponent,
+            props:props
+        });
+
+        this.setState({
+            stack: newStack
+        });
+    }
+
+    pop = ()=>{
+        this._componentStack.pop();
+        let newStack = NavigationStateUtils.pop(this.state.stack);
+
+        this.setState({
+            stack:newStack
+        });
+    }
+
+    componentWillMount(){
+        if(this.props.hackBackAndroid){
+            BackAndroid.addEventListener('hardwareBackPress',this._handleBack);
+        }
+    }
+
+    componentWillUnmount(){
+        if(this.props.hackBackAndroid){
+            BackAndroid.removeEventListener('hardwareBackPress',this._handleBack);
+        }
+    }
+
+    _handleBack = ()=>{
+        if(this.state.stack.index > 0){
+            this._onNavigateBack();
+            return true;
+        }
+        return false;
+    } 
+
+    _renderRightComponent = (sceneProps) =>{
+        let {scene} = sceneProps;
+        let routes = this.state.stack.routes;
+        
+        //不在栈内就不在渲染
+        if(scene.index >= routes.length){
+           return null;
+        }
+
+        return (routes[scene.index].renderRightComponent)(sceneProps);
+
+    }
+
+    _renderScene = (sceneProps) =>{
+        let {scene} = sceneProps;
+
+        if(scene.index >= this._componentStack.length){
+           return null;
+        }    
+        
+        let RenderComponent = this._componentStack[scene.index];
+
+        return (
+            <StaticContainer isActive = {scence.isActive}>
+                <RenderComponent {...scence.routes.props} navigator={this}>
+                      
+                </RenderComponent>
+            </StaticContainer>
+        );
+    }
+
+    _onNavigateBack = ()=>{
+        this.pop();
+    }
+
+    _renderHeader = (sceneProps) =>{
+        let {style} = this.props;
+        if(!scenceProps.scence.route.isShowHeader){
+           return null;
+        }
+        return (
+            <NavigationHeader
+                {...sceneProps}
+                onNavigateBack={this._onNavigateBack}
+                renderRightComponent={this._renderRightComponent}
+                style={[styles.navigationHeader, style]}
+            />
+        );
+    }
+
+   render() {
+        return (
+            <NavigationCardStack
+                onNavigateBack={this._onNavigateBack}
+                renderHeader={this._renderHeader}
+                navigationState={this.state.stack}
+                renderScene={this._renderScene}
+            />
+        );
+    }
 }
+
+const styles = StyleSheet.create({
+    navigationHeader: {
+        backgroundColor: '#EFEFF2',
+        elevation: 0,
+        borderBottomWidth: StyleSheet.hairlineWidth
+    }
+});
