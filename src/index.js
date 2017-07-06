@@ -10,11 +10,14 @@ import {
  Navigator
 } from './uiLibrary';
 
-
+import {
+   profileStore  
+} from './storeSingleton.js';
 
 import Login from './component/Login.js';
 import TabBarIndex from './component/TabBarIndex.js';
 
+@observer
 export default class NickIM extends React.Component{
     state: Object;
     constructor(props:Object){
@@ -22,8 +25,8 @@ export default class NickIM extends React.Component{
     }
 
     render(){
-       if(true){ //TODO：get from store
-          if(true){ //TODO： get user message
+       if(profileStore.isTryRestoreFromStorage){ //TODO：get from store
+          if(profileStore.userInfo){ //TODO： get user message
              return(
                   <Navigator
                    initialComponent={TabBarIndex} />   

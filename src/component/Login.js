@@ -12,7 +12,9 @@ import {
    TextInput
 } from './../uiLibrary';
 
-
+import {
+    profileStore
+} from '../storeSingleton.js';
 
 export default class Login extends Component{
     state:object;
@@ -28,10 +30,10 @@ export default class Login extends Component{
 
     _login = async()=>{
         try{
-            //await profileStore.login(
-              //  this.state.name,
-               // this.state.phone
-           // );
+          await profileStore.login(
+              this.state.name,
+               this.state.phone
+            );
             //toast
         }catch(e){
             //toast

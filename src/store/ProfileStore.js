@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
  class  ProfileStore{
+
     @observable userInfo: Any = null;
     @observable friendList: Object = {};
     @observable isTryRestoreFromStorage = false;
@@ -14,11 +15,10 @@ import {
     STORAGE_KEY_FRIEND_LIST = 'IM_FRIEND_LIST';
       
        constructor(props: Object) {
-
-      /* // 恢复用户信息
+         // 恢复用户信息
         this._restoreUserInfoFromStorage();
         // 拉取好友
-        this.getOnlineList();*/
+        //this.getOnlineList();
     }
 
 
@@ -40,12 +40,9 @@ import {
             name,
             phone
         });
-        
-        
+        console.log(result);
         this.userInfo = result;
-        
-        AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO, this.userInfo); 
-        
+        AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO, this.userInfo);
         return result;
   }
 

@@ -40,6 +40,11 @@ class My extends Component {
         super(props);
     }
 
+    componentWillUnmount(){
+        
+        
+    }
+
     render() {
         return (
             <ScrollView
