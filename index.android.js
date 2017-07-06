@@ -8,6 +8,6 @@
 import {
   AppRegistry,
  } from 'react-native';
- import NickIM from './src/Index.js';
+ import NickIM from './src/index.js';
 
 AppRegistry.registerComponent('nickim', () => NickIM);

@@ -1,25 +1,33 @@
 import { autorun,observable } from 'mobx';
-import config from '../config.js';
-import fetchLocal from './util/fecthLocal.js';
 
 import {
     AsyncStorage,
     Vibration
 } from 'react-native';
 
-export default class  ProfileStore{
-    @observable userInfo: any = null;
-    @observable friendList: object = {};
+ class  ProfileStore{
+    @observable userInfo: Any = null;
+    @observable friendList: Object = {};
     @observable isTryRestoreFromStorage = false;
     
     STORAGE_KEY_USER_INFO = 'IM_USER_INFO';
     STORAGE_KEY_FRIEND_LIST = 'IM_FRIEND_LIST';
+      
+       constructor(props: Object) {
 
-   // 从本地回复用户信息
+      /* // 恢复用户信息
+        this._restoreUserInfoFromStorage();
+        // 拉取好友
+        this.getOnlineList();*/
+    }
+
+
+
+   // 从本地缓存恢复用户信息
    async _restoreUserInfoFromStorage(){
        let value = await AsyncStorage.getItem(this.STORAGE_KEY_USER_INFO);
        this.userInfo = value ? JSON.parse(value): value;
-       // 本地用户信息回复成功
+       // 本地用户信息恢复成功
        this.isTryRestoreFromStorage = true;
    }
 
@@ -60,3 +68,5 @@ export default class  ProfileStore{
       return result;
   }
 }
+
+export  default ProfileStore;

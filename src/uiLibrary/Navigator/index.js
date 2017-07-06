@@ -1,4 +1,15 @@
-import React, { Component, PropTypes } from 'react';
+/**
+ * <plusmancn@gmail.com> created at 2017
+ *
+ * Copyright (c) 2017 plusmancn, all rights
+ * reserved.
+ *
+ * @flow
+ *
+ * 基于 NavigationExperimental 的封装
+ */
+
+import React, { Component, PropTypes} from 'react';
 import {
     StyleSheet,
     BackAndroid,
@@ -13,72 +24,84 @@ const {
 
 import StaticContainer from './StaticContainer.js';
 
-export default class Navigator extends Component{
+class Navigator extends Component {
+    state: Object;
+    _compoentStack: Array<Object>;
 
-      state:Object;
-      _componentStack:Array<Object>;
+    static propTypes = {
+        initialComponent: PropTypes.func.isRequired,
+        hackBackAndroid: PropTypes.bool,
+        isShowHeader: PropTypes.bool,
+        style: PropTypes.object,
+    };
 
-      static defaultProps = {
-          hackBackAndroid:true,
-          isShowHeader:true
-      }
-      consructor(props:Object){
-         super(props);
+    static defaultProps = {
+        hackBackAndroid: true,
+        isShowHeader: true
+    };
 
-         //导航栈
-         this.state = {
-             stack:{
-                 index:0,
-                 routes:[
-                     {
-                        key:'0',
-                        title:props.initialComponent.NavigationTitle || '',
-                        isShowHeader : props.isShowHeader,
-                        renderRightComponent:()=>{null;}
-                     }
-                 ]
-             }
-         };
+    constructor(props: Object) {
+        super(props);
+        // 导航栈
+        this.state = {
+            stack: {
+                index: 0,
+                routes: [
+                    {
+                        key: '0',
+                        title: props.initialComponent.NavigationTitle || '',
+                        isShowHeader: props.isShowHeader,
+                        renderRightComponent: () => {null;}
+                    }
+                ]
+            }
+        };
 
-        //组件栈
-        this._componentStack = [
+        // 组件栈
+        this._compoentStack = [
             props.initialComponent
         ];
+    }
 
-      }
-
-      setNavigationTitle = (title:String) =>{
+    // 外部开放方法，设置当前 title
+    setNavigationTitle = (title: String) => {
         let stack = this.state.stack;
+
         stack.routes[stack.index].title = title;
         this.setState({
-            stack:stack
-        });
-      }
-
-      setRenderRightComponent = (renderRightComponent: function) =>{
-         let stack = this.state.stack;
-         stack.routes[stack.index].renderRightComponent = renderRightComponent;
-         this.setState({
-             stack:stack
-         });
-      }
-      
-     toogleNavigationHeader = () =>{
-        let stack = this.state.stack;
-        stack.routes[stack.index].isShowHeader = !stack.routes[stack.index].isShowHeader;
-        this.setState({
-            stack:stack
+            stack: stack
         });
     }
 
-    push = (component:object, title:sring = '', props:object = {},renderRightComponent:function =()=>{null;}, isShowHeader:boolean = true)=>{
-        this._componentStack.push(component);
-        let newStack = NavigationStateUtils.push(this.state.stack,{
-            key:String(this.state.stack.index + 1),
-            title:title || component.NavigationTitle || '',
-            isShowHeader:isShowHeader,
-            renderRightComponent:renderRightComponent,
-            props:props
+    // 设置右方组件
+    setRenderRightCompoent = (renderRightComponent: Function) => {
+        let stack = this.state.stack;
+
+        stack.routes[stack.index].renderRightComponent =renderRightComponent;
+
+        this.setState({
+            stack: stack
+        });
+    }
+
+    // 设置导航条显示和隐藏
+    toogleNavigationHeader = () => {
+        let stack = this.state.stack;
+
+        stack.routes[stack.index].isShowHeader = !stack.routes[stack.index].isShowHeader;
+        this.setState({
+            stack: stack
+        });
+    }
+
+    push = (component: Object, title: string = '', props: Object = {}, renderRightComponent: Function = () => {null;}, isShowHeader: boolean = true) => {
+        this._compoentStack.push(component);
+        let newStack = NavigationStateUtils.push(this.state.stack, {
+            key: String(this.state.stack.index + 1),
+            title: title || component.NavigationTitle || '',
+            isShowHeader: isShowHeader,
+            renderRightComponent: renderRightComponent,
+            props: props
         });
 
         this.setState({
@@ -86,75 +109,84 @@ export default class Navigator extends Component{
         });
     }
 
-    pop = ()=>{
-        this._componentStack.pop();
+    pop = () => {
+        this._compoentStack.pop();
         let newStack = NavigationStateUtils.pop(this.state.stack);
 
         this.setState({
-            stack:newStack
+            stack: newStack
         });
     }
 
-    componentWillMount(){
-        if(this.props.hackBackAndroid){
-            BackAndroid.addEventListener('hardwareBackPress',this._handleBack);
+    // 进行组件之间通讯
+    componentWillMount() {
+        // android 回退事件处理
+        if (this.props.hackBackAndroid) {
+            BackAndroid.addEventListener('hardwareBackPress', this._handleBack);
         }
     }
 
-    componentWillUnmount(){
-        if(this.props.hackBackAndroid){
-            BackAndroid.removeEventListener('hardwareBackPress',this._handleBack);
+    componentWillUnmount() {
+        // 取消事件监听
+        if (this.props.hackBackAndroid) {
+            BackAndroid.removeEventListener('hardwareBackPress', this._handleBack);
         }
     }
 
-    _handleBack = ()=>{
-        if(this.state.stack.index > 0){
+    // 内部方法
+    _handleBack = () => {
+        if (this.state.stack.index > 0) {
             this._onNavigateBack();
             return true;
         }
-        return false;
-    } 
 
-    _renderRightComponent = (sceneProps) =>{
-        let {scene} = sceneProps;
-        let routes = this.state.stack.routes;
-        
-        //不在栈内就不在渲染
-        if(scene.index >= routes.length){
-           return null;
+        return false;
+    }
+
+    _renderRightComponent = (sceneProps) => {
+        let { scene } = sceneProps;
+        let routes  = this.state.stack.routes;
+
+        // 已经出栈则不进行渲染
+        if (scene.index >= routes.length ) {
+            return null;
         }
 
         return (routes[scene.index].renderRightComponent)(sceneProps);
-
     }
 
-    _renderScene = (sceneProps) =>{
-        let {scene} = sceneProps;
+    // 头部渲染
+    _renderScene = (sceneProps) => {
+        let { scene } = sceneProps;
 
-        if(scene.index >= this._componentStack.length){
-           return null;
-        }    
-        
-        let RenderComponent = this._componentStack[scene.index];
+        // 已经出栈则不进行渲染
+        if (scene.index >= this._compoentStack.length ) {
+            return null;
+        }
 
+        let RenderCompoent = this._compoentStack[scene.index];
         return (
-            <StaticContainer isActive = {scence.isActive}>
-                <RenderComponent {...scence.routes.props} navigator={this}>
-                      
-                </RenderComponent>
+            <StaticContainer
+                isActive={scene.isActive}
+            >
+                <RenderCompoent
+                    {...scene.route.props}
+                    navigator={this}
+                />
             </StaticContainer>
         );
     }
 
-    _onNavigateBack = ()=>{
+    _onNavigateBack = () => {
         this.pop();
     }
 
-    _renderHeader = (sceneProps) =>{
-        let {style} = this.props;
-        if(!scenceProps.scence.route.isShowHeader){
-           return null;
+    _renderHeader = (sceneProps) => {
+        let { style } = this.props;
+        if (!sceneProps.scene.route.isShowHeader) {
+            return null;
         }
+
         return (
             <NavigationHeader
                 {...sceneProps}
@@ -165,7 +197,7 @@ export default class Navigator extends Component{
         );
     }
 
-   render() {
+    render() {
         return (
             <NavigationCardStack
                 onNavigateBack={this._onNavigateBack}
@@ -184,3 +216,5 @@ const styles = StyleSheet.create({
         borderBottomWidth: StyleSheet.hairlineWidth
     }
 });
+
+export default Navigator;

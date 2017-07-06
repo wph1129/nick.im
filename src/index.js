@@ -11,8 +11,9 @@ import {
 } from './uiLibrary';
 
 
-import Login from './component/login';
-import TabBarIndex from './component/TabBarIndex';
+
+import Login from './component/Login.js';
+import TabBarIndex from './component/TabBarIndex.js';
 
 export default class NickIM extends React.Component{
     state: Object;
