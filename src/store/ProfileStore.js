@@ -53,11 +53,8 @@ import {
   async getOnlineUserList(){
 
       //服务端请求获取
-      let result = JSON.stringify({
-          name,
-          userID
-      });
-
+      let result = [{avatar: "", name: "nick1", userId: 1, status: "online" }];
+      console.log(result);
       this.friendList = result;
 
       AsyncStorage.setItem(this.STORAGE_KEY_FRIEND_LIST, this.friendList);

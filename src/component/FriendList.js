@@ -22,7 +22,7 @@ import {
     ListItem
 } from './../uiLibrary';
 
-//import { profileStore } from '../storeSingleton.js';
+import { profileStore } from '../storeSingleton.js';
 import ChatRoom from './ChatRoom.js';
 
 @observer
@@ -53,7 +53,7 @@ class FriendList extends React.Component {
             refreshing: true
         });
 
-      //  await profileStore.getOnlineList();
+       await profileStore.getOnlineUserList();
 
         this.setState({
             refreshing: false
@@ -67,13 +67,13 @@ class FriendList extends React.Component {
                 labelText={row.name}
                 labelStyle={row.status === 'online' ? styles.online : ''}
                 onPress={()=>{
-                /*    this.props.navigator.push(ChatRoom, row.name, {
+                this.props.navigator.push(ChatRoom, row.name, {
                         toInfo: {
                             userId: row.userId,
                             avatar: row.avatar,
                             name: row.name
                         }
-                    });*/
+                    });
                 }}
             />
         );
@@ -106,7 +106,7 @@ class FriendList extends React.Component {
                     />
                 }
                 style={styles.container}
-                dataSource={this.ds.cloneWithRowsAndSections(toJS(''))} //profileStore.friendList
+                dataSource={this.ds.cloneWithRowsAndSections(toJS(profileStore.friendList))}
                 renderSectionHeader={this._renderSectionHeader}
                 renderSeparator={this._renderSeparator}
                 renderRow={this._renderRow}
