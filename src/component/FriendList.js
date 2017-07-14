@@ -97,6 +97,7 @@ class FriendList extends React.Component {
 
 
     render() {
+        console.log(toJS(profileStore.friendList));
         return (
             <ListView
                 refreshControl={
