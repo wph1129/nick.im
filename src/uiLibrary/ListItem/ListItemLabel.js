@@ -38,6 +38,14 @@ export default class Label extends React.Component {
         super(props);
     }
 
+    componentDidMount(){
+        this._mounted = true;
+    }
+
+    componentWillUnmount(){
+       this._mounted = false;
+    }
+
     _renderIcon = () => {
         let { icon, iconStyle } = this.props;
         if (icon) {
