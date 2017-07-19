@@ -1,5 +1,4 @@
 /**
- * <plusmancn@gmail.com> created at 2017
  *
  * Copyright (c) 2017 plusmancn, all rights
  * reserved.
@@ -28,9 +27,9 @@ import {
     ListItem
 } from './../uiLibrary';
 
-/*import {
+import {
     socketStore,
-} from '../storeSingleton.js';*/
+} from '../storeSingleton.js';
 
 import ChatRoom from './ChatRoom.js';
 
@@ -57,7 +56,7 @@ class SessionList extends React.Component {
                     title: '删除',
                     type: 'Delete',
                     onPress: () => {
-                        //socketStore.deleteSession(row.key);
+                        socketStore.deleteSession(row.key);
                     }
                 }]}
             >
@@ -91,7 +90,8 @@ class SessionList extends React.Component {
     }
 
     render() {
-        if (false) { //socketStore.sessionList.length
+        console.log(socketStore.sessionList.length);
+        if (socketStore.sessionList.length) {
             return (
                 <View style={styles.container}>
                     <ListView

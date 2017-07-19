@@ -35,19 +35,21 @@ import {
   async login(name:string, phone:string){
         
         //TODO：请求后台接口，获取用户的登录信息
-
-        let result = JSON.stringify({
+        let result = {
+            userId:'610122',
             name,
-            phone
-        });
+            phone,
+            avatar:'http://image-2.plusman.cn/app/im-client/avatar/tuzki_14.png'
+        };
         console.log(result);
         this.userInfo = result;
-        AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO, this.userInfo);
+        AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO, JSON.stringify(this.userInfo));
         return result;
   }
 
   async logout(){
       this.userInfo = null; // 这句代码的调用 会触发这个 AsyncStorage.setItem(this.STORAGE_KEY_USER_INFO,this.userInfo)，导致本地存储的用户信息被清除
+      AsyncStorage.clear();
   }
 
   async getOnlineUserList(){

@@ -26,10 +26,10 @@ import {
     ListItem
 } from './../uiLibrary';
 
-/*import {
+import {
     profileStore,
     socketStore
-} from '../storeSingleton.js';*/
+} from '../storeSingleton.js';
 
 import Profile from './Profile.js';
 import Setting from './Setting.js';
@@ -62,9 +62,9 @@ class My extends Component {
                             style={styles.leftBox}
                         >
                             <Image
-                               /* source={{
+                              source={{
                                     uri: profileStore.userInfo.avatar
-                                }}*/
+                                }}
                                 style={styles.avatar}
                             />
 
@@ -75,14 +75,14 @@ class My extends Component {
                                     style={styles.name}
                                 >
                                     {
-                                        //profileStore.userInfo.name
+                                        profileStore.userInfo.name
                                     }
                                 </Text>
 
                                 <Text
                                     style={styles.info}
                                 >
-                                    手机号: {//profileStore.userInfo.phone
+                                    手机号: {profileStore.userInfo.phone
                                     }
                                 </Text>
                             </View>
